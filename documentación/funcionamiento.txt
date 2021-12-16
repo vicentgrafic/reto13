@@ -1,0 +1,244 @@
+El proyecto funciona con CRUD y adicionalmente he añadido funciones personalizadas que realizan las acciones de forma similar al CRUD pero mediante código en phyton.
+Ambas son funcionales aunque el código personalizado no muestra tanta información como CRUD.
+
+
+##########################################################################################################
+USERS: usuarios de Django
+	
+	
+	CRUD:
+		
+		
+		#Crea un usuario
+		POST http://127.0.0.1:8000/registration/
+		{
+			"username": "user01",
+			"email": "correo@yahoo.es",
+			"password1": "passwordxx",
+			"password2": "passwordxx"
+		}
+
+		#Valida el acceso a un usuario
+		POST http://127.0.0.1:8000/login/
+		{
+			"username": "user01",
+			"password": "passwordxx"
+		}
+
+		#Finaliza la sesión de un usuario
+		POST http://127.0.0.1:8000/logout/
+
+
+##########################################################################################################
+GAME: juegos
+
+
+	CRUD:
+	
+	
+		#Crea un juego
+		POST http://127.0.0.1:8000/game/
+		{
+			"name": "juego01",
+			"created_date": "2021-12-15T14:47:00Z"
+		}
+		
+		#Actualiza un juego
+		PUT http://127.0.0.1:8000/game/3/
+		{
+			"name": "gm232",
+			"created_date": "2021-12-15T14:47:00Z"
+		}
+
+		#Borra un juego
+		DELETE http://127.0.0.1:8000/game/3/
+		
+
+		#Lista todos los juegos
+		GET http://127.0.0.1:8000/game/
+
+	
+	PERSONALIZADO:
+	
+	
+		#Crea un juego
+		POST http://127.0.0.1:8000/game_create/
+		{
+			"name": "game01"
+		}
+		
+		#Borra un juego
+		POST http://127.0.0.1:8000/game_delete/
+		{
+			"name": "game01"
+		}
+		
+		#Lista todos los juegos
+		POST http://127.0.0.1:8000/game_list/
+
+
+##########################################################################################################
+CHAT: conversaciones de usuario a usuario
+
+
+	CRUD:
+	
+
+		#Envía un mensaje desde el usuario "3" hacia el usuario "4"
+		POST http://127.0.0.1:8000/userChat/
+		{
+			"user": "/users/3/",
+			"user_destination": "/users/4/",
+			"message": "añado el mensaje"
+		}
+		
+		#Modifica un mensaje enviado desde el usuario "3" hacia el usuario "4"
+		PUT http://127.0.0.1:8000/userChat/10/
+		{
+			"user": "/users/3/",
+			"user_destination": "/users/4/",
+			"message": "cambio el mensaje"
+		}
+	
+		#Elimina un mensaje enviado desde el usuario "3" hacia el usuario "4"
+		DELETE http://127.0.0.1:8000/userChat/10/
+		
+		
+		#Muestra todos los mensajes enviados por el usuario "3" hacia el usuario "4"
+		GET http://127.0.0.1:8000/userChat/?user=3&user_destination=4
+		
+		
+	PERSONALIZADO:
+	
+	
+		#Muestra todos los mensajes hacia el usuario actual logueado "user01" enviados desde el usuario "user02"
+		POST http://127.0.0.1:8000/user_list_chat/
+		{
+			"name": "user02"
+		}
+		
+		#Envía un mensaje desde el usaurio actual logueado "user01" al usuario "user02"
+		POST http://127.0.0.1:8000/userChat_create/
+		{
+			"user_destination": "user02",
+			"message": "hola usuario 02"
+		}
+	
+
+##########################################################################################################
+ROOM: salas de juego y conversaciones entre usuarios dentro de las mismas salas
+
+
+	CRUD:
+	
+	
+		#Crea una sala
+		POST http://127.0.0.1:8000/room/
+		{
+			"name": "room23",
+			"maximum_players": 10,
+			"created_by" : "/users/3/",
+			"game":"/game/2/"
+		}
+		
+		#Actualiza una sala
+		PUT http://127.0.0.1:8000/room/20/
+		{
+			"name": "room1x",
+			"maximum_players": 5,
+			"created_by" : "/users/3/",
+			"game":"/game/2/"
+		}
+		
+		#Borra una sala
+		DELETE http://127.0.0.1:8000/room/2/
+		
+		#Lista todas las salas
+		GET http://127.0.0.1:8000/room/
+		
+		#El usuario entra en una sala
+		POST http://127.0.0.1:8000/roomUser/
+		{
+			"room" : "/room/17/",
+			"user":"/users/3/"
+		}
+		
+		#El usuario sale de una sala
+		DELETE http://127.0.0.1:8000/roomUser/39/
+		
+		#Lista todas las salas en las que se encuentra el usuario
+		GET http://127.0.0.1:8000/roomUser/?user=3
+		
+		#El usuario envia un mensaje a la sala
+		POST http://127.0.0.1:8000/roomChat/
+		{
+			"room" : "/room/17/",
+			"user":"/users/3/",
+			"message":"hola a todos los usuarios"
+		}
+		
+		#El usuario modifica un mensaje enviado a una sala
+		PUT http://127.0.0.1:8000/roomChat/10/
+		{
+			"room" : "/room/17/",
+			"user":"/users/2/",
+			"message":"hola a todos los usuarios y usuarias"
+		}
+
+		#El usuario elimina un mensaje de una sala
+		DELETE http://127.0.0.1:8000/roomChat/10/
+		
+		#Lista todos los mensajes y usuarios vinculados al chat de la sala
+		GET http://127.0.0.1:8000/roomChat/?room=17
+		
+		
+	PERSONALIZADO:
+	
+	
+		#El usuario logueado crea una sala
+		POST http://127.0.0.1:8000/room_create/
+		{
+			"name": "room22",
+			"maximum_players": 10,
+			"game": "game01"
+		}
+		
+		#El usuario logueado borra una sala
+		POST http://127.0.0.1:8000/room_delete/
+		{
+			"name": "room22"
+		}
+		
+		#El usuario logueado entra en una sala
+		POST http://127.0.0.1:8000/room_in/
+		{
+			"room": "room22",
+			"text_alt": ""
+		}
+		
+		#El usuario logueado sale de una sala
+		POST http://127.0.0.1:8000/room_out/
+		{
+			"room": "room22",
+			"room_alt": "roomXX"
+		}
+		
+		#El usuario logueado envia un mensaje a la sala
+		POST http://127.0.0.1:8000/roomChat_create/
+		{
+			"room": "room22",
+			"message": "pepito grillo 3"
+		}
+		
+		#Lista todos los mensajes vinculados al chat de la sala
+		POST http://127.0.0.1:8000/room_list_chat/
+		{
+			"room": "room22"
+		}
+		
+		#Lista los usuarios de la sala
+		POST http://127.0.0.1:8000/room_list_users/
+		{
+			"room": "room22"
+		}
+		
